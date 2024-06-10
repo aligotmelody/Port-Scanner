@@ -68,12 +68,6 @@ def octet(ip_address):
        current_ip = ".".join(octets)
        address.append(current_ip)
        return address
-#---------------------------------------------------------------------------------------
-#  REGEX hostname check #
-
-host_names = re.compile(r'^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9]*[a-zA-Z0-9])\.)+[a-zA-Z]{2,}$')
-def hst_name_check(hst_name):
-     return bool(host_names.match(hst_name))
 
 #----------------------------------------------------------------------------
 # ipv4 REGEX check #
