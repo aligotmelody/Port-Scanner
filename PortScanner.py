@@ -2,7 +2,7 @@ import socket
 import termcolor
 import ipaddress
 import re
-from hostname import resolve_hostname
+from hostname import hst_name_check, resolve_hostname
 
 
 print(termcolor.colored("""
@@ -193,14 +193,14 @@ def given_inpt_check(inpt):
               targets = get_range_ip_inpt(inpt)
               Port, flag = get_port()
               print(flag)
-              Scanner(targets, Port,flag)
+              Scanner(targets, Port, flag)
               return targets 
 
        elif hst_name_check(inpt):
              IP_address = resolve_hostname(inpt)
              targets = get_range_ip_inpt(IP_address)
-             Port = get_port()
-             Scanner(targets, Port)
+             Port, flag= get_port()
+             Scanner(targets, Port, flag)
              return targets
        else:
              print(termcolor.colored("invalid form !!!", "light_red"))
@@ -215,3 +215,7 @@ def main():
 
 if __name__ == "__main__" : 
       main()
+
+
+
+#scanme 45.33.32.156
