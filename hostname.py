@@ -1,4 +1,3 @@
-import dns.resolver
 import re 
 import termcolor
 import socket
@@ -14,7 +13,7 @@ def hst_name_check(hst_name):
 def resolve_hostname(hostname):
     try:
         ip_address = socket.gethostbyname(hostname)
-        print(f"Resolved {hostname} to {ip_address}")
+        print(termcolor.colored(f"Resolved {hostname} to {ip_address}", "green"))
         return ip_address
     except socket.gaierror as e:
         print(termcolor.colored(f"Error resolving hostname: {e}", "light_red"))
