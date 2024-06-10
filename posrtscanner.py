@@ -2,7 +2,7 @@ import socket
 import termcolor
 import ipaddress
 import re
-import dns.resolver
+from hostname import resolve_hostname
 
 
 print(termcolor.colored("""
@@ -71,7 +71,7 @@ def octet(ip_address):
 #---------------------------------------------------------------------------------------
 #  REGEX hostname check #
 
-host_names = re.compile(r'^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.)+[a-zA-Z]{2,}$')
+host_names = re.compile(r'^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9]*[a-zA-Z0-9])\.)+[a-zA-Z]{2,}$')
 def hst_name_check(hst_name):
      return bool(host_names.match(hst_name))
 
@@ -165,13 +165,17 @@ def Scanner(ip, ports, flag):
 def port_scan(ipAddress, Port):
           for ip in ipAddress:
                 ip_obj = ipaddress.ip_address(ip)
+                ip_str = str(ip)
                 try:
                      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                     sock.settimeout(5)
+                     #sock.settimeout(5)
                      if isinstance(Port, str):
                              Port = int(Port)
                              print(type(Port))
-                             sock.connect_ex((ip_obj, Port))  # Attempt connection (might raise exception)
+                             print(type(ip_obj))
+                             print(ip_obj)
+                             sock.connect_ex((ip, Port))
+                             #sock.connect_ex((ip_obj, Port))  # Attempt connection (might raise exception)
                              result = sock.recv(1024).decode()
               
                      return result
@@ -187,26 +191,7 @@ def port_scan(ipAddress, Port):
                 except socket.error :
                             print(termcolor.colored(f"Couldn't connect to the server {ipAddress} xxxxxxx", "light_red"))
                 finally:
-                            sock.close()
-              
-#-----------------------------------------------------------------------------------------
-# DNS lookup #              
-              
-def resolve_hostname(hostname):
-  
-  try:
-    resolver = dns.resolver.Resolver()
-    ip_address = resolver.query(hostname, 'A')[0].to_text()
-    i = 0
-    while len(ip_address) > 0 and ip_address[i+1].rdtype == dns.rdatatype.CNAME:
-          cname_target = ip_address[0].data.to_text()
-          print(f"Following CNAME record: {hostname} --> {cname_target}")
-    return ip_address
-  
-  except dns.resolver.ResolverError:
-    print(termcolor.colored(f"Error resolving hostname '{hostname}': Could not find IP address !!!", "light_red"))
-    return None
-  
+                            sock.close()  
 #--------------------------------------------------------------------
 # USER Input check #
 def given_inpt_check(inpt):
